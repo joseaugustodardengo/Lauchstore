@@ -5,34 +5,29 @@
                 <h1>Launchstore</h1>
                 <h2>COMPRA E VENDA</h2>
             </div>
-        </a>            
+        </a>
+    
+
+        <form class="search" action="/products/search" method="GET">
+            <input type="text" name="filter" placeholder="Buscar por produtos" {% if search.term %} value={{search.term}} {% endif %}>
+        </form>
+
+        <nav class="primary">
+            <ul>
+                <li>
+                    <a href="/ads/create">
+                        <i class="material-icons">add</i>
+                        Novo anúncio
+                    </a>
+                </li>
+                <li>
+                    <a href="/accounts">
+                        <i class="material-icons">account_circle</i>
+                        Minha conta
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <form class="search" action="/products/search" method="GET">
-        <input type="text" name="filter" placeholder="Buscar por produtos"
-            {% if search.term %}
-                value={{search.term}}
-            {% endif %}
-        >
-        <button type="submit">Buscar</button>
-    </form>
-
-    <nav class="primary">
-        <ul>
-            <li>
-                <a href="/ads/create">
-                    <i class="material-icons">add</i>
-                    Novo anúncio
-                </a>
-            </li>
-            <li>
-                <a href="/accounts">
-                    <i class="material-icons">account_circle</i>
-                    Minha conta
-                </a>
-            </li>                                     
-        </ul>
-    </nav>
-
-    
-    </header>
+</header>
