@@ -3,7 +3,7 @@
     <div>
         <select name="category_id">
             {% for category in categories %}}
-            <option value="{{category.id}}"{% if products.category_id == category.id %}selected{% endif %}>
+            <option value="{{category.id}}"{% if product.category_id == category.id %}selected{% endif %}>
                 {{category.name}}
             </option> 
             {% endfor %}           
@@ -15,50 +15,47 @@
 <div class="item">
     <div>Nome</div>
     <div>
-        <input type="text" name="name" value="{{products.name}}">
+        <input type="text" name="name" value="{{product.name}}">
     </div>
 </div>
 
 <div class="item">
     <div>Descrição</div>
     <div>
-        <textarea name="description" >
-            {{products.description}}
-        </textarea>        
+        <textarea name="description">{{product.description}}</textarea>        
     </div>
 </div>
 
 {# Campo de foto #}
 
 
-{# Faremos uma mascara de dinheiro #}
 <div class="item">
     <div>Preço</div>
     <div>
-        <input type="text" name="price" value="{{products.price}}">
+        <input type="text" name="price" value="{{product.price}}" onkeydown="Mask.apply(this, 'formatBRL')">
     </div>
 
-    {% if products.old_price %}
-        <input type="hidden" name="old_price" value="products.old_price">
+    {% if product.old_price %}
+        <input type="hidden" name="old_price" value="product.old_price">
     {% endif %}
 </div>
 
 <div class="item">
     <div>Quantidade</div>
     <div>
-        <input type="number" name="quantity" placeholder="Estoque disponível" value="{{products.quantity}}">
+        <input type="number" name="quantity" placeholder="Estoque disponível" value="{{product.quantity}}">
     </div>
 </div>
 
-{% if products.status %}
+{% if product.status %}
 <div class="item">
     <div>Disponível ?</div>
     <div>
         <span><input type="radio" name="status" value="1" 
-        {% if products.status == '1' %} checked {% endif %}>Sim
+        {% if product.status == '1' %} checked {% endif %}>Sim
         </span>
         <span><input type="radio" name="status" value="0" 
-        {% if products.status == '0'%} checked {% endif %}>Não
+        {% if product.status == '0'%} checked {% endif %}>Não
         </span>
     </div>
 </div>
