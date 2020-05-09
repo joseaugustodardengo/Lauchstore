@@ -15,6 +15,10 @@ module.exports = {
         RETURNING id`
     
         return db.query(query, data)
+    },
+
+    find(id) {
+        return db.query('SELECT * FROM products WHERE id = $1',[id])
     }
 
 }
