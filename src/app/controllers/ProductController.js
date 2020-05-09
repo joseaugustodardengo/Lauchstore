@@ -1,5 +1,6 @@
 const Category = require('../models/Category')
 const Product = require('../models/Product')
+const File = require('../models/File')
 const { formatPrice } = require('../../lib/utils')
 
 module.exports = {
@@ -15,7 +16,11 @@ module.exports = {
 
         for (key of keys) {
             if (req.body[key] == "")
-                return res.send('Please, fill all fields')
+                return res.send('Por favor, preencha todos os campos.')
+        }
+
+        if(req.files.length == 0){
+            return res.send("Por favor, envie pelo menos uma imagem.")
         }
 
         req.body.price = req.body.price.replace(/\D/g,"")
@@ -31,8 +36,11 @@ module.exports = {
         ]
 
         let results = await Product.create(values)
-        const productId = results.rows[0].id       
+        const productId = results.rows[0].id    
         
+        const filesPromise = req.files.map(file => File.create({...file, product_id: productId }))
+        await Promise.all(filesPromise)
+
         return res.redirect(`products/${productId}/edit`)
     },
 
