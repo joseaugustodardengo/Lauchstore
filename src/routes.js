@@ -10,6 +10,7 @@ routes.get('/products/create', ProductController.create)
 routes.get('/products/:id/edit', ProductController.edit)
 routes.post('/products',ProductController.store)
 routes.put('/products',ProductController.update)
+routes.delete('/products',ProductController.destroy)
 
 //Alias
 routes.get('/ads/create', function(req,res) {
