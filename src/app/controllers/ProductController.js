@@ -50,5 +50,37 @@ module.exports = {
         const categories = results.rows
         
         return res.render("products/edit.njk",{ product, categories })
+    },
+
+    async update(req, res) {
+        const keys = Object.keys(req.body)
+
+        for (key of keys) {
+            if (req.body[key] == "")
+                return res.send('Please, fill all fields')
+        }
+
+        req.body.price = req.body.price.replace(/\D/g,"")
+        
+        if(req.body.old_price != req.body.price){
+            const oldProduct = await Product.find(req.body.id)
+            req.body.old_price = oldProduct.rows[0].price
+        }
+
+        const values = [        
+            req.body.category_id,
+            req.body.user_id || 1,
+            req.body.name,
+            req.body.description,
+            req.body.old_price || req.body.price,
+            req.body.price,
+            req.body.quantity,
+            req.body.status || 1,
+            req.body.id
+        ]
+
+        await Product.update(values)
+
+        return res.redirect(`/products/${req.body.id}/edit`)
     }
 }
