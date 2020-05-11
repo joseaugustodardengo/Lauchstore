@@ -1,7 +1,7 @@
 const Category = require('../models/Category')
 const Product = require('../models/Product')
 const File = require('../models/File')
-const { formatPrice } = require('../../lib/utils')
+const { formatPrice, date } = require('../../lib/utils')
 
 module.exports = {
     async create(req,res) {
@@ -69,6 +69,24 @@ module.exports = {
         
         return res.render("products/edit.njk",{ product, categories, files })
     },
+    async show(req, res) {
+        let results = await Product.find(req.params.id)
+        const product = results.rows[0]
+
+        if(!product) return res.send("Produto não encontrado")
+        
+        const { day, month,  hour, minutes } = date(product.updated_at)
+
+        product.published = {
+            day: `${day}/${month}`,
+            hour: `${hour}:${minutes}`           
+        }
+
+        product.oldPrice = formatPrice(product.old_price)
+        product.price = formatPrice(product.price)
+
+        return res.render("products/show", { product })
+    },
 
     async update(req, res) {
         const keys = Object.keys(req.body)
@@ -113,7 +131,7 @@ module.exports = {
 
         await Product.update(values)
 
-        return res.redirect(`/products/${req.body.id}/edit`)
+        return res.redirect(`/products/${req.body.id}`)
     },
 
     async destroy(req, res) {
