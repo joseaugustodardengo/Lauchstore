@@ -1,0 +1,38 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+    <section class="shop container">
+        <h2>Últimos produtos</h2>
+
+        <div class="items">
+            {% for product in products %}
+                <div class="product">
+
+                    <div class="image">
+                        {% if product.img %}
+                            <img src="{{product.img}}" alt=""> 
+                        {% else %}                   
+                            <img src="http://placehold.it/500x500?text=Produto sem foto" alt="">
+                        {% endif %}
+                    </div>
+
+                    {% if product.oldPrice != product.price %}
+                        <div class="old-price">{{product.oldPrice}}</div>
+                    {% endif %}
+
+                    <p>{{product.price}}</p>
+                    <h4>{{product.name}}</h4>
+
+                    <a href="/products/{{product.id}}" class="button">
+                        Ver produto
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+{% endblock content %}
