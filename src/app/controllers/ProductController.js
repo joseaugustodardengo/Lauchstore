@@ -4,6 +4,33 @@ const File = require('../models/File')
 const { formatPrice, date } = require('../../lib/utils')
 
 module.exports = {
+    async index(req, res) {
+        const results = await Product.all()
+        let products = results.rows
+
+        if(!products) return res.send('Produtos não encontrados')
+
+        async function getImage(productId) {
+            let results = await Product.files(productId)            
+            let files = results.rows
+            files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public","")}`)
+
+            return files[0]
+        }
+
+        const productsPromise = products.map(async product => {
+            product.img = await getImage(product.id)
+            product.oldPrice = formatPrice(product.old_price)
+            product.price = formatPrice(product.price)
+
+            return product
+        })
+
+        const items = await Promise.all(productsPromise)
+
+        return res.render("products/index.njk", { products: items })
+    },
+
     async create(req,res) {
         //Pegar categorias
         const results = await Category.all()        

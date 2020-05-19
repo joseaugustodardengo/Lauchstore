@@ -8,7 +8,7 @@ module.exports = {
             
             const { filter, category } = req.query
 
-            if(!filter) return res.redirect("/")        
+            if(!filter) return res.redirect("/products")        
             
             async function getImage(productId) {
                 let results = await Product.files(productId)            

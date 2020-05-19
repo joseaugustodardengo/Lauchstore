@@ -12,6 +12,7 @@ routes.get("/", HomeController.index)
 routes.get('/products/search', SearchController.index)
 
 //Products
+routes.get('/products', ProductController.index)
 routes.get('/products/create', ProductController.create)
 routes.get('/products/:id', ProductController.show)
 routes.get('/products/:id/edit', ProductController.edit)
