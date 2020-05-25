@@ -4,6 +4,8 @@ const routes = express.Router()
 const SessionController = require('../app/controllers/SessionController')
 const UserController = require('../app/controllers/UserController')
 
+const Validator = require('../app/validators/user')
+
 
 // login/logout
 /*
@@ -21,7 +23,7 @@ routes.post('/password-reset',SessionController.reset) //armazenar os dados do f
 //User
 routes.get('/register', UserController.registerForm) //formulario de usuario, tanto para cadastrar quanto alterar
 // routes.get('/', UserController.show) //profile, dashboard após logar
-// routes.post('/register', UserController.store)
+routes.post('/register', Validator.store, UserController.store)
 // routes.put('/', UserController.update)
 // routes.delete('/', UserController.destroy)
 
