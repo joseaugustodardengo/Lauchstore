@@ -5,7 +5,10 @@ async function store(req, res, next) {
 
     for (key of keys) {
         if (req.body[key] == "")
-            return res.send('Por favor, preencha todos os campos.')
+            return res.render('users/register.njk', {
+                user: req.body,
+                error: 'Por favor, preencha todos os campos.'
+            })            
     }
 
     let { email, cpf_cnpj, password, passwordRepeat } = req.body
@@ -17,10 +20,16 @@ async function store(req, res, next) {
         or: { cpf_cnpj }
     })
 
-    if (user) return res.send('Usuário existe')
+    if (user) return res.render('users/register.njk', {
+        user: req.body,
+        error: 'Usuário já existe'
+    })
 
     if (password != passwordRepeat) {
-        return res.send('Senha não confere')
+        return res.render('users/register.njk', {
+            user: req.body,
+            error: 'Senha não confere'
+        })        
     }
 
     next()
