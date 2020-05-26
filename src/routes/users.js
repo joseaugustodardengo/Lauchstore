@@ -22,7 +22,7 @@ routes.post('/password-reset',SessionController.reset) //armazenar os dados do f
 
 //User
 routes.get('/register', UserController.registerForm) //formulario de usuario, tanto para cadastrar quanto alterar
-// routes.get('/', UserController.show) //profile, dashboard após logar
+routes.get('/', UserController.show) //profile, dashboard após logar
 routes.post('/register', Validator.store, UserController.store)
 // routes.put('/', UserController.update)
 // routes.delete('/', UserController.destroy)

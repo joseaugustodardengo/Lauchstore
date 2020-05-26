@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const {hash} = require('bcryptjs')
 
 module.exports = {
 
@@ -9,10 +10,31 @@ module.exports = {
 
         }
     },
+    async show(req,res){
+        try {
+            return res.send('ok, cadastrado')
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
     async store(req, res) {
         try {
+
+            const passwordHash = await hash(req.body.password, 8)          
+
+            const values = [        
+                req.body.name,
+                req.body.email,
+                passwordHash,
+                req.body.cpf_cnpj.replace(/\D/g,""),
+                req.body.cep.replace(/\D/g,""),
+                req.body.address
+            ]
+
+            const userId = await User.create(values)
             
-            return res.send('Passou')
+            return res.redirect('/users')
             
         } catch (error) {
             console.error(error)

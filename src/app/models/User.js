@@ -20,5 +20,24 @@ module.exports = {
         } catch (error) {
             console.error(error)
         }
+    },
+
+    async create(data) {
+        try {
+            const query = `INSERT INTO users (
+                name,
+                email,
+                password,
+                cpf_cnpj,
+                cep,
+                address
+            ) VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id`
+        
+            const results = await db.query(query, data)
+            return results.rows[0].id
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
