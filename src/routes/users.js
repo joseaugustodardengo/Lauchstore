@@ -12,14 +12,13 @@ const {isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/sessio
 routes.get('/login', isLoggedRedirectToUsers, SessionController.loginForm)
 routes.post('/login',SessionValidator.login, SessionController.login)
 routes.post('/logout',SessionController.logout)
-/*
 
 // reset password / forgot
 routes.get('/forgot-password',SessionController.forgotForm) //formulário de esqueci senha
+routes.post('/forgot-password', SessionValidator.forgot, SessionController.forgot) //armazenar os dados do formulario de esqueci senha, enviar o email com o token novo
 routes.get('/password-reset',SessionController.resetForm) //formulario de resetar a senha, passando a senha nova
-routes.post('/forgot-password',SessionController.forgot) //armazenar os dados do formulario de esqueci senha, enviar o email com o token novo
-routes.post('/password-reset',SessionController.reset) //armazenar os dados do formulario resetar a senha, com o password novo
-*/
+routes.post('/password-reset',SessionValidator.reset, SessionController.reset) //armazenar os dados do formulario resetar a senha, com o password novo
+
 
 //User
 routes.get('/register', UserController.registerForm) //formulario de usuario, tanto para cadastrar quanto alterar
