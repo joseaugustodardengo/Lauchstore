@@ -25,6 +25,6 @@ routes.get('/register', UserController.registerForm) //formulario de usuario, ta
 routes.get('/', onlyUsers, UserValidator.show, UserController.show) //profile, dashboard após logar
 routes.post('/register', UserValidator.store, UserController.store)
 routes.put('/', UserValidator.update, UserController.update)
-// routes.delete('/', UserController.destroy)
+routes.delete('/', UserController.destroy)
 
 module.exports = routes

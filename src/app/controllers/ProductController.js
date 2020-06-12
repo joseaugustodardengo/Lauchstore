@@ -50,10 +50,11 @@ module.exports = {
             return res.send("Por favor, envie pelo menos uma imagem.")
         }
 
+        req.body.user_id = req.session.userId
         req.body.price = req.body.price.replace(/\D/g,"")
         const values = [        
             req.body.category_id,
-            req.body.user_id || 1,
+            req.body.user_id,
             req.body.name,
             req.body.description,
             req.body.old_price || req.body.price,
@@ -154,7 +155,6 @@ module.exports = {
 
         const values = [        
             req.body.category_id,
-            req.body.user_id || 1,
             req.body.name,
             req.body.description,
             req.body.old_price || req.body.price,
