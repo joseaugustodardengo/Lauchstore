@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const Product = require('../models/Product')
+const fs = require('fs')
 const {formatCpfCnpj, formatCep} = require('../../lib/utils')
 const {hash} = require('bcryptjs')
 
@@ -11,6 +13,7 @@ module.exports = {
 
         }
     },
+
     async show(req,res){
         try {   
             const {user} = req
@@ -29,14 +32,14 @@ module.exports = {
 
             const passwordHash = await hash(req.body.password, 8)          
 
-            const values = [        
-                req.body.name,
-                req.body.email,
-                passwordHash,
-                req.body.cpf_cnpj.replace(/\D/g,""),
-                req.body.cep.replace(/\D/g,""),
-                req.body.address
-            ]
+            const values = {       
+                name: req.body.name,
+                email: req.body.email,
+                password: passwordHash,
+                cpf_cnpj: req.body.cpf_cnpj.replace(/\D/g,""),
+                cep: req.body.cep.replace(/\D/g,""),
+                address: req.body.address
+        }
 
             const userId = await User.create(values)
 
@@ -53,17 +56,12 @@ module.exports = {
         try {
             const {user} = req
 
-            let {name, email, cpf_cnpj, cep, address} = req.body
-            
-            cpf_cnpj = cpf_cnpj.replace(/\D/g,"")
-            cep = cep.replace(/\D/g,"")
-
             await User.update(user.id, {
-                name,
-                email,
-                cpf_cnpj,
-                cep,
-                address
+                name: req.body.name,
+                email: req.body.email,
+                cpf_cnpj: req.body.cpf_cnpj.replace(/\D/g,""),
+                cep: req.body.cep.replace(/\D/g,""),
+                address: req.body.address
             })
 
             return res.render('users/index', {
@@ -81,8 +79,28 @@ module.exports = {
 
     async destroy(req, res) {
         try {
-            await User.delete(req.body.id)
-            req.session.destroy()
+
+            const products = Product.findAll({ where: {user_id : req.body.id}})
+            
+            const allFilesPromise = products.map(product => 
+                Product.files(product.id)
+            )
+    
+            let promiseResults = await Promise.all(allFilesPromise)
+        
+            await User.delete(req.body.id)    
+            req.session.destroy()        
+
+            promiseResults.map(results => {
+                results.rows.map(file => {
+                    try {
+                        fs.unlinkSync(file.path)                        
+                    } catch (error) {
+                        console.error(error)
+                    }
+
+                })
+            })
 
             return res.render("session/login", {
                 success: "Conta deletada com sucesso!"

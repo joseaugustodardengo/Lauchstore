@@ -6,28 +6,12 @@ Base.init({table: 'products'})
 
 module.exports = {
     ...Base,
-/*
-    create(data) {
-        const query = `INSERT INTO products (
-            category_id,
-            user_id,
-            name,
-            description,
-            old_price,
-            price,
-            quantity,
-            status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING id`
-    
-        return db.query(query, data)
-    },
-*/
-    files(productId) {
-        return db.query('SELECT * FROM files WHERE product_id = $1', [productId])        
+    async files(productId) {
+        const results = await db.query('SELECT * FROM files WHERE product_id = $1', [productId])        
+        return results
     },
 
-    search(params) {
+    async search(params) {
         const { filter, category } = params
 
         let query = "",
@@ -54,8 +38,8 @@ module.exports = {
             ${filterQuery}
         `
 
-        return db.query(query)
+        const results = await db.query(query)
+        return results.rows
     }
-
 
 }
