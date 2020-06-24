@@ -8,7 +8,7 @@ module.exports = {
     ...Base,
     async files(productId) {
         const results = await db.query('SELECT * FROM files WHERE product_id = $1', [productId])        
-        return results
+        return results.rows
     },
 
     async search(params) {

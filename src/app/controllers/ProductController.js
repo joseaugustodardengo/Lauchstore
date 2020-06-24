@@ -56,20 +56,23 @@ module.exports = {
                 return res.send("Por favor, envie pelo menos uma imagem.")
             }
 
+            let price = req.body.price.replace(/\D/g, "")
+
             const values = {
-                category_id: req.body.categoty_id,
+                category_id: req.body.category_id,
                 user_id: req.session.userId,
                 name: req.body.name,
                 description: req.body.description,
-                old_price: req.body.old_price || req.body.price,
-                price: req.body.price.replace(/\D/g, ""),
+                old_price: req.body.old_price || price,
+                price,
                 quantity: req.body.quantity,
                 status: req.body.status || 1
             }
 
             const product_id = await Product.create(values)
 
-            const filesPromise = req.files.map(file => File.create({ ...file, product_id }))
+            const filesPromise = req.files.map(file => File.create({name: file.filename,
+                path: file.path, product_id }))
             await Promise.all(filesPromise)
 
             return res.redirect(`products/${product_id}/edit`)
@@ -146,7 +149,8 @@ module.exports = {
             }
 
             if (req.files.length != 0) {
-                const newFilesPromise = req.files.map(file => File.create({ ...file, product_id: req.body.id }))
+                const newFilesPromise = req.files.map(file => File.create({ name: file.name,
+                    path: file.path, product_id: req.body.id }))
                 await Promise.all(newFilesPromise)
             }
 
@@ -159,17 +163,19 @@ module.exports = {
                 await Promise.all(removedFilesPromise)
             }
 
+            req.body.price = req.body.price.replace(/\D/g, "")
+
             if (req.body.old_price != req.body.price) {
                 const oldProduct = await Product.find(req.body.id)
                 req.body.old_price = oldProduct.rows[0].price
             }
 
             const values = {
-                category_id: req.body.categoty_id,                
+                category_id: req.body.category_id,                
                 name: req.body.name,
                 description: req.body.description,
-                old_price: req.body.old_price || req.body.price,
-                price: req.body.price.replace(/\D/g, ""),
+                old_price: req.body.old_price,
+                price: req.body.price,
                 quantity: req.body.quantity,
                 status: req.body.status    
             }
