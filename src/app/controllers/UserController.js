@@ -80,7 +80,7 @@ module.exports = {
     async destroy(req, res) {
         try {
 
-            const products = Product.findAll({ where: {user_id : req.body.id}})
+            const products = await Product.findAll({ where: {user_id : req.body.id}})
             
             const allFilesPromise = products.map(product => 
                 Product.files(product.id)
@@ -91,8 +91,8 @@ module.exports = {
             await User.delete(req.body.id)    
             req.session.destroy()        
 
-            promiseResults.map(results => {
-                results.rows.map(file => {
+            promiseResults.map(files => {
+                files.map(file => {
                     try {
                         fs.unlinkSync(file.path)                        
                     } catch (error) {
