@@ -38,9 +38,9 @@
             <div class="description">{{product.description}}</div>
             <div class="price-buy">
                 <div class="price">
-                    {{product.price}}
-                    {% if product.price != product.oldPrice %}
-                        <span class="old">{{product.oldPrice}}</span>
+                    {{product.formattedPrice}}
+                    {% if product.formattedPrice != product.formattedOldPrice %}
+                        <span class="old">{{product.formattedOldPrice}}</span>
                     {% endif %}
                 </div>
                 <div class="buy">
