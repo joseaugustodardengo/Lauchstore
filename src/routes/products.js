@@ -10,7 +10,6 @@ const {onlyUsers} = require('../app/middlewares/session')
 routes.get('/search', SearchController.index)
 
 //Products
-routes.get('/', ProductController.index)
 routes.get('/create', onlyUsers, ProductController.create)
 routes.get('/:id', ProductController.show)
 routes.get('/:id/edit', onlyUsers, ProductController.edit)
