@@ -1,6 +1,6 @@
 const Cart = require('../../lib/cart')
 const LoadProductService = require('../services/LoadProductService')
-const { addOne } = require('../../lib/cart')
+const { addOne, removeOne } = require('../../lib/cart')
 
 module.exports = {
     async index(req, res) {
@@ -26,6 +26,23 @@ module.exports = {
             let { cart } = req.session
 
             req.session.cart = Cart.init(cart).addOne(product)
+
+            return res.redirect('/cart')
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    async removeOne(req, res) {
+        try {
+            const {id} = req.params
+
+            let { cart } = req.session
+            
+            if(!cart) return res.redirect('/cart')
+
+            req.session.cart = Cart.init(cart).removeOne(id)
 
             return res.redirect('/cart')
 
