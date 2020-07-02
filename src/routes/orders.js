@@ -6,6 +6,7 @@ const { onlyUsers } = require('../app/middlewares/session')
 
 
 routes.get('/', onlyUsers, OrderController.index)
+routes.get('/sales', onlyUsers, OrderController.sales)
 routes.post('/', onlyUsers, OrderController.store)
 
 
