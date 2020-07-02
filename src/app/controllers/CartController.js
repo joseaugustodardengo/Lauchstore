@@ -34,7 +34,7 @@ module.exports = {
         }
     },
 
-    async removeOne(req, res) {
+    removeOne(req, res) {
         try {
             const {id} = req.params
 
@@ -49,6 +49,24 @@ module.exports = {
         } catch (error) {
             console.error(error)
         }
+    },
+    
+    delete(req,res) {
+        try {
+
+            const {id} = req.params
+
+            let { cart } = req.session
+            
+            if(!cart) return res.redirect('/cart')
+
+            req.session.cart = Cart.init(cart).delete(id)
+
+            return res.redirect('/cart')
+        } catch (error) {
+            console.error(error)
+        }
+        
     }
 
 }
