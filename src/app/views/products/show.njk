@@ -1,7 +1,10 @@
 {% extends "layout.njk" %}
+{%import "parts/card.njk" as card%}
 
 {% block content %}
-    <section class="product-single container">
+
+    {% call card.render('', 'product-single container') %}
+
         <div class="gallery">
             <div class="highlight">
                 {% if not files[0] %}
@@ -20,40 +23,44 @@
 
             <div class="gallery-preview">
                 {% for image in files %}
-                    <img 
-                        src="{{image.src}}" 
-                        alt="{{image.name}}"
-                        {% if loop.index0 == 0 %} 
-                            class="active"
-                        {% endif %}
-                        onclick="ImageGallery.setImage(event)"
-                    >
+                    <img src="{{image.src}}" alt="{{image.name}}" {% if loop.index0 == 0 %} class="active" {% endif %} onclick="ImageGallery.setImage(event)">
                 {% endfor %}
             </div>
         </div>
 
         <div class="info">
             <h1>{{product.name}}</h1>
-            <div class="published">Publicado em {{product.published.day}} às {{product.published.hour}}</div>
+            <div class="published">Publicado em
+                {{product.published.day}}
+                às
+                {{product.published.hour}}</div>
             <div class="description">{{product.description}}</div>
             <div class="price-buy">
                 <div class="price">
-                    {{product.price}}
-                    {% if product.price != product.oldPrice %}
-                        <span class="old">{{product.oldPrice}}</span>
+                    {{product.formattedPrice}}
+                    {% if product.formattedPrice != product.formattedOldPrice %}
+                        <span class="old">{{product.formattedOldPrice}}</span>
                     {% endif %}
                 </div>
-                <div class="buy">
-                    {% if product.status == 0 %}
-                        <p class="unavaible">Indisponível</p>
-                    {% elseif product.quantity == 0 %}
-                        <p class="unavaible">Fora de estoque</p>
-                    {% else %}
-                        <button class="button">Comprar</button>
-                    {% endif %}
-                </div>
+
+                {% if (session.userId) and (product.user_id == session.userId) %}
+                    <p class="unavaible">Você é o vendedor</p>
+                {% else %}
+                    <div class="buy">
+                        {% if product.status == 0 %}
+                            <p class="unavaible">Indisponível</p>
+                        {% elseif product.quantity == 0 %}
+                            <p class="unavaible">Fora de estoque</p>
+                        {% else %}
+                            <form action="/cart/{{product.id}}/add-one" method="POST">                               
+                                <button class="button">Adicionar ao carrinho</button>                        
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
             </div>
         </div>
-    </section>
+    {% endcall %}
 
 {% endblock %}
