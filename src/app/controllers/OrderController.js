@@ -4,6 +4,7 @@ const User = require('../models/User')
 const Order = require('../models/Order')
 const mailer = require('../../lib/mailer')
 const Cart = require('../../lib/cart')
+const { update } = require('../models/Order')
 
 const email = (seller, product, buyer) => `
 <h2>Olá ${seller.name} </h2>
@@ -97,5 +98,38 @@ module.exports = {
         })
 
         return res.render("orders/details", {order})
+    },
+
+    async update(req, res) {
+        try {
+            const { id, action } = req.params
+            const acceptedActions = ['close', 'cancel']
+
+            if(!acceptedActions.includes(action)) return res.send("Não pode realizar essa ação.")
+
+            const order = await Order.findOne({
+                where: {id}
+            })
+
+            if(!order) return res.send('Pedido não encontrado.')
+
+            if(order.status != 'open') return res.send("Não pode realizar essa ação.")
+
+            const statuses = {
+                close: "sold",
+                cancel: "canceled"
+            }
+
+            order.status = statuses[action]
+
+            await Order.update(id, {
+                status: order.status
+            })
+
+            return res.redirect('/orders/sales')
+
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
